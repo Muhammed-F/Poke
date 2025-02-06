@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Order Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Dashboard Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+        }
+
+        .dashboard {
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .orders-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.preparing {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status.delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .filter-buttons {
+            margin-bottom: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Add a Logout Button -->
+    <button onclick="logout()"
+        style="position: absolute; top: 10px; right: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer;">Logout</button>
+
+    <div class="dashboard">
+        <div id="orders-list"></div>
+        <h1>Order Management Dashboard</h1>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn" onclick="filterOrders('all')">All</button>
+            <button class="filter-btn" onclick="filterOrders('pending')">Pending</button>
+            <button class="filter-btn" onclick="filterOrders('preparing')">Preparing</button>
+            <button class="filter-btn" onclick="filterOrders('delivered')">Delivered</button>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="orders-table">
+            <table id="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-body">
+                    <!-- Orders will be populated here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Sample Orders Data (Initially from localStorage or placeholder data)
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+        // Save orders to localStorage when updated
+        function saveOrders() {
+            localStorage.setItem("orders", JSON.stringify(orders));
+        }
+
+        // Initialize dashboard
+        function renderOrders(filter = 'all') {
+            const tbody = document.getElementById('orders-body');
+            tbody.innerHTML = '';
+
+            const filteredOrders = filter === 'all'
+                ? orders
+                : orders.filter(order => order.status === filter);
+
+            filteredOrders.forEach(order => {
+                const row = `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.customer}</td>
+                        <td>${order.items}</td>
+                        <td>${order.total}</td>
+                        <td>
+                            <span class="status ${order.status}">
+                                ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                            </span>
+                        </td>
+                        <td>
+                            <select class="status-select" onchange="updateStatus('${order.id}', this.value)">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="preparing" ${order.status === 'preparing' ? 'selected' : ''}>Preparing</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                            </select>
+                            <button class="delete-btn" onclick="deleteOrder('${order.id}')">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Filter orders based on status
+        function filterOrders(status) {
+            renderOrders(status);
+        }
+
+        // Update order status in localStorage and re-render orders
+        function updateStatus(orderId, newStatus) {
+            const order = orders.find(order => order.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                saveOrders(); // Save updated orders to localStorage
+                renderOrders(); // Re-render the orders table
+            }
+        }
+
+        // Delete order
+        function deleteOrder(orderId) {
+            orders = orders.filter(order => order.id !== orderId);
+            saveOrders(); // Save updated orders to localStorage
+            renderOrders(); // Re-render the orders table
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("isLoggedIn"); // Clear login session
+            window.location.href = "login.html"; // Redirect to login page
+        }
+
+        // Check if the user is logged in
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html"; // Redirect if not logged in
+        }
+
+        // Function to add a new order (simulating an order being placed)
+        function addNewOrder(id, customer, items, total) {
+            const newOrder = {
+                id: id,
+                customer: customer,
+                items: items,
+                total: total,
+                status: 'pending'
+            };
+            orders.push(newOrder);
+            saveOrders(); // Save new order to localStorage
+            renderOrders(); // Re-render the orders table
+        }
+
+        // Initial render of orders when page loads
+        renderOrders();
+    </script>
+    <script src="App.js"></script>
+    <script src="OrderTable.jsx"></script>
+
+</body>
+
+</html>

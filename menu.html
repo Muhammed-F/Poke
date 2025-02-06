@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <title>FoodieHub</title>
+    <link rel="stylesheet" href="menu.css">
+    <style>
+        /* Style to hide checkout form initially */
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-utensils">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
+                    <path d="M7 2v20" />
+                    <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
+                    <h1>PokePoke</h1>
+                </svg>
+            </div>
+            <nav>
+                <div class="nav__header">
+
+                    <div class="nav__menu__btn" id="menu-btn">
+                        <i class="ri-menu-line"></i>
+                    </div>
+                </div>
+                <ul class="nav__links" id="nav-links">
+                    <li><a href="index.html">HEM</a></li>
+                    <li><a href="menu.html">MENY</a></li>
+                    <li><a href="kontaktaoss.html">KONTAKTA OSS</a></li>
+                    <li><a href="login.html">Login</a></li>
+
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <div class="menu-grid" id="menu-items"></div>
+            <div class="cart-sidebar">
+                <div class="cart" id="cart">
+                    <h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-shopping-cart">
+                            <circle cx="8" cy="21" r="1" />
+                            <circle cx="19" cy="21" r="1" />
+                            <path
+                                d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                        </svg>
+                        Your Order
+                    </h2>
+                    <div id="cart-items"></div>
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cart-total">0.00 SEK</span>
+                    </div>
+                    <button class="checkout-btn" onclick="showCheckoutForm()">Proceed to Checkout</button>
+                </div>
+            </div>
+
+            <!-- Checkout Form Popup -->
+            <div id="checkout-form" class="popup-form hidden">
+                <div class="form-container">
+                    <h2>Checkout</h2>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="customer-name" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="customer-phone" placeholder="Your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label>Pick Up or Delivery</label>
+                        <select id="pickup-or-delivery">
+                            <option value="Pick Up">Pick Up</option>
+                            <option value="Delivery">Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Restaurant</label>
+                        <select id="restaurant">
+                            <option value="Poké Poké - Djäknegatan">Poké Poké - Djäknegatan</option>
+                            <option value="Kronprinsen Köpcenter">Kronprinsen Köpcenter</option>
+                            <option value="Restaurant 3">Restaurant 3</option>
+                        </select>
+                    </div>
+                    <div class="error" id="checkout-error"></div>
+                    <div class="button-group">
+                        <button class="primary-btn" onclick="confirmOrder()">Confirm Order</button>
+                        <button class="secondary-btn" onclick="hideCheckoutForm()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 FoodieHub. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Function to show the checkout form (popup)
+
+    </script>
+</body>
+
+</html>
